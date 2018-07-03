@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import info.ruibu.util.SystemUtil;
@@ -29,31 +30,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnLocalVideo = (Button) findViewById(R.id.btnLocalVideo);
-        btnLocalVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(MainActivity.this, "播放本地视频需要读取SD卡，请允许操作SD卡的权限。", Toast.LENGTH_SHORT).show();
-                }
-
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("*/*");
-                    startActivityForResult(intent, VIDEO_REQUEST);
-                } else {
-                    //请求权限
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST);
-                }
-            }
-        });
-
         tilRemoteVideo = (TextInputLayout) findViewById(R.id.tilRemoteVideo);
 
         etRemoteVideo = (EditText) findViewById(R.id.etRemoteVideo);
 
-        Button btnRemoteVideo = (Button) findViewById(R.id.btnRemoteVideo);
-        btnRemoteVideo.setOnClickListener(new View.OnClickListener() {
+        //JUMPSMASH的按钮
+        ImageButton btnJumpSmash = (ImageButton) findViewById(R.id.imageButton);
+        btnJumpSmash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (etRemoteVideo.getText().toString().equals("")) {
@@ -61,11 +44,47 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, VLCPlayerActivity.class);
-                intent.putExtra("VideoType", "Remote");
-                intent.putExtra("VideoUrl", etRemoteVideo.getText().toString());
-                startActivity(intent);
+                Intent intentJumpSmash = new Intent();
+                intentJumpSmash.setClass(MainActivity.this, VLCPlayerActivity.class);
+                intentJumpSmash.putExtra("VideoType", "Remote");
+                intentJumpSmash.putExtra("VideoUrl", etRemoteVideo.getText().toString().concat("/jumpsmash.mpg"));
+                startActivity(intentJumpSmash);
+            }
+        });
+
+        //OW的按钮
+        ImageButton btnow = (ImageButton) findViewById(R.id.imageButton3);
+        btnow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etRemoteVideo.getText().toString().equals("")) {
+                    tilRemoteVideo.setError("远程视频地址不能为空！");
+                    return;
+                }
+
+                Intent intentow = new Intent();
+                intentow.setClass(MainActivity.this, VLCPlayerActivity.class);
+                intentow.putExtra("VideoType", "Remote");
+                intentow.putExtra("VideoUrl", etRemoteVideo.getText().toString().concat("/ow.mpg"));
+                startActivity(intentow);
+            }
+        });
+
+        //PUBG的按钮
+        ImageButton btnpubg = (ImageButton) findViewById(R.id.imageButton2);
+        btnpubg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etRemoteVideo.getText().toString().equals("")) {
+                    tilRemoteVideo.setError("远程视频地址不能为空！");
+                    return;
+                }
+
+                Intent intentpubg = new Intent();
+                intentpubg.setClass(MainActivity.this, VLCPlayerActivity.class);
+                intentpubg.putExtra("VideoType", "Remote");
+                intentpubg.putExtra("VideoUrl", etRemoteVideo.getText().toString().concat("/pubg.mpg"));
+                startActivity(intentpubg);
             }
         });
     }
